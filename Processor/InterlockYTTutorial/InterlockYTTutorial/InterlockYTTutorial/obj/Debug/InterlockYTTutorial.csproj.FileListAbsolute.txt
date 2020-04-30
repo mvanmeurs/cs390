@@ -1,0 +1,10 @@
+C:\Users\mason\Documents\CS390\VS2008\Processor\InterlockYTTutorial\InterlockYTTutorial\InterlockYTTutorial\bin\Debug\InterlockYTTutorial.dll
+C:\Users\mason\Documents\CS390\VS2008\Processor\InterlockYTTutorial\InterlockYTTutorial\InterlockYTTutorial\bin\Debug\InterlockYTTutorial.pdb
+C:\Users\mason\Documents\CS390\VS2008\Processor\InterlockYTTutorial\InterlockYTTutorial\InterlockYTTutorial\bin\Debug\Crestron.SimplSharpPro.DeviceSupport.dll
+C:\Users\mason\Documents\CS390\VS2008\Processor\InterlockYTTutorial\InterlockYTTutorial\InterlockYTTutorial\bin\Debug\Crestron.SimplSharpPro.UI.dll
+C:\Users\mason\Documents\CS390\VS2008\Processor\InterlockYTTutorial\InterlockYTTutorial\InterlockYTTutorial\bin\Debug\SimplSharpCustomAttributesInterface.dll
+C:\Users\mason\Documents\CS390\VS2008\Processor\InterlockYTTutorial\InterlockYTTutorial\InterlockYTTutorial\bin\Debug\SimplSharpHelperInterface.dll
+C:\Users\mason\Documents\CS390\VS2008\Processor\InterlockYTTutorial\InterlockYTTutorial\InterlockYTTutorial\bin\Debug\SimplSharpPro.exe
+C:\Users\mason\Documents\CS390\VS2008\Processor\InterlockYTTutorial\InterlockYTTutorial\InterlockYTTutorial\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\mason\Documents\CS390\VS2008\Processor\InterlockYTTutorial\InterlockYTTutorial\InterlockYTTutorial\obj\Debug\InterlockYTTutorial.dll
+C:\Users\mason\Documents\CS390\VS2008\Processor\InterlockYTTutorial\InterlockYTTutorial\InterlockYTTutorial\obj\Debug\InterlockYTTutorial.pdb

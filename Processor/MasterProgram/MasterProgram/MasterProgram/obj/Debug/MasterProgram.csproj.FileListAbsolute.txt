@@ -1,0 +1,16 @@
+C:\Users\mason\Documents\CS390\VS2008\Processor\MasterProgram\MasterProgram\MasterProgram\bin\Debug\MasterProgram.dll
+C:\Users\mason\Documents\CS390\VS2008\Processor\MasterProgram\MasterProgram\MasterProgram\bin\Debug\MasterProgram.pdb
+C:\Users\mason\Documents\CS390\VS2008\Processor\MasterProgram\MasterProgram\MasterProgram\bin\Debug\Crestron.SimplSharpPro.DeviceSupport.dll
+C:\Users\mason\Documents\CS390\VS2008\Processor\MasterProgram\MasterProgram\MasterProgram\bin\Debug\Crestron.SimplSharpPro.UI.dll
+C:\Users\mason\Documents\CS390\VS2008\Processor\MasterProgram\MasterProgram\MasterProgram\bin\Debug\SimplSharpCustomAttributesInterface.dll
+C:\Users\mason\Documents\CS390\VS2008\Processor\MasterProgram\MasterProgram\MasterProgram\bin\Debug\SimplSharpHelperInterface.dll
+C:\Users\mason\Documents\CS390\VS2008\Processor\MasterProgram\MasterProgram\MasterProgram\bin\Debug\SimplSharpPro.exe
+C:\Users\mason\Documents\CS390\VS2008\Processor\MasterProgram\MasterProgram\MasterProgram\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\mason\Documents\CS390\VS2008\Processor\MasterProgram\MasterProgram\MasterProgram\obj\Debug\MasterProgram.dll
+C:\Users\mason\Documents\CS390\VS2008\Processor\MasterProgram\MasterProgram\MasterProgram\obj\Debug\MasterProgram.pdb
+C:\Users\mason\Documents\CS390\VS2008\Processor\MasterProgram\MasterProgram\MasterProgram\bin\Debug\Crestron.SimplSharpPro.CrestronConnected.dll
+C:\Users\mason\Documents\CS390\VS2008\Processor\MasterProgram\MasterProgram\MasterProgram\bin\Debug\Crestron.SimplSharpPro.Fusion.dll
+C:\Users\mason\Documents\CS390\VS2008\Processor\MasterProgram\MasterProgram\MasterProgram\bin\Debug\Crestron.SimplSharpPro.GeneralIO.dll
+C:\Users\mason\Documents\CS390\VS2008\Processor\MasterProgram\MasterProgram\MasterProgram\bin\Debug\Crestron.SimplSharpPro.DM.dll
+C:\Users\mason\Documents\CS390\VS2008\Processor\MasterProgram\MasterProgram\MasterProgram\bin\Debug\Crestron.SimplSharpPro.Lighting.dll
+C:\Users\mason\Documents\CS390\VS2008\Processor\MasterProgram\MasterProgram\MasterProgram\bin\Debug\Crestron.SimplSharpPro.Shades.dll
