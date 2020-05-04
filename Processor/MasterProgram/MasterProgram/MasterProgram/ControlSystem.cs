@@ -58,6 +58,7 @@ namespace HelloWorldTutorial
                 //A4 is 164 in hexidecial notaion
                 lighting = new Glpp1DimFlv3CnPm(164, this);
                 lighting.Register();
+                
 
                 comport = ComPorts[1]; 
                 comport.Register();
@@ -147,6 +148,18 @@ namespace HelloWorldTutorial
                             else if (args.Sig.Number == 13)
                             {
                                 lighting.SetLoadsOff();
+                            }
+                            //Sleep Screen
+                            else if (args.Sig.Number == 1)
+                            {
+                                userInterface.BooleanInput[1].BoolValue = true;
+                                userInterface.BooleanInput[2].BoolValue = false;
+                            }
+                            //Wake Screen
+                            else if (args.Sig.Number == 2)
+                            {
+                                userInterface.BooleanInput[2].BoolValue  = true;
+                                userInterface.BooleanInput[1].BoolValue = false;
                             }
                         }
                         break;
