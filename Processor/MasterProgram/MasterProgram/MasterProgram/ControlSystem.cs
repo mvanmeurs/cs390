@@ -21,13 +21,23 @@ namespace HelloWorldTutorial
         private Glpp1DimFlv3CnPm lighting;
         private HdMd8x1 hdmi_switcher;
 
-        public const string PROJECTOR_DELIMITER = "\x0D";
-        public const string PROJECTOR_VGA1 = "SOURCE 10";
-        public const string PROJECTOR_VGA2 = "SOURCE 20";
-        public const string PROJECTOR_HDMI = "SOURCE 30";
-        public const string PROJECTOR_SVIDEO = "SOURCE 40";
-        public const string PROJECTOR_POWER_ON = "PWR ON";
-        public const string PROJECTOR_POWER_OFF = "PWR OFF";
+        const int SYSTEM_POWER_BUTTON = 1;
+        const int SYSTEM_WAKE_BUTTON = 2;
+        const int LIGHTING_STATE_BUTTON = 3;
+        const int PROJECTOR_POWER_ON_BUTTON = 6;
+        const int PROJECTOR_POWER_OFF_BUTTON = 7;
+        const int PROJECTOR_HDMI_BUTTON = 8;
+        const int PROJECTOR_VGA1_BUTTON = 9;
+        const int PROJECTOR_VGA2_BUTTON = 10;
+        const int PROJECTOR_SVIDEO_BUTTON = 11;
+
+        public const string PROJECTOR_DELIMITER_STR = "\x0D";
+        public const string PROJECTOR_VGA1_STR = "SOURCE 10";
+        public const string PROJECTOR_VGA2_STR = "SOURCE 20";
+        public const string PROJECTOR_HDMI_STR = "SOURCE 30";
+        public const string PROJECTOR_SVIDEO_STR = "SOURCE 40";
+        public const string PROJECTOR_POWER_ON_STR = "PWR ON";
+        public const string PROJECTOR_POWER_OFF_STR = "PWR OFF";
 
         /// <summary>
         /// ControlSystem Constructor. Starting point for the SIMPL#Pro program.
@@ -84,13 +94,6 @@ namespace HelloWorldTutorial
 
         void userInterface_Sigchange(BasicTriList currentDevice, SigEventArgs args)
         {
-            bool PROJECTOR_POWER_ON_BUTTON = userInterface.BooleanInput[6].BoolValue;
-            bool PROJECTOR_POWER_OFF_BUTTON = userInterface.BooleanInput[7].BoolValue;
-            bool PROJECTOR_HDMI_BUTTON = userInterface.BooleanInput[8].BoolValue;
-            bool PROJECTOR_VGA1_BUTTON = userInterface.BooleanInput[9].BoolValue;
-            bool PROJECTOR_VGA2_BUTTON = userInterface.BooleanInput[10].BoolValue;
-            bool PROJECTOR_SVIDEO_BUTTON = userInterface.BooleanInput[11].BoolValue;
-            
             switch (args.Sig.Type)
             {
                 case eSigType.Bool:
@@ -98,68 +101,72 @@ namespace HelloWorldTutorial
                         if (args.Sig.BoolValue)
                         {
                             //Turn on
-                            if (args.Sig.Number == 6)
+                            if (args.Sig.Number == PROJECTOR_POWER_ON_BUTTON)
                             {
-                                PROJECTOR_POWER_ON_BUTTON = true;
-                                PROJECTOR_POWER_OFF_BUTTON = false;
-                                comport.Send(PROJECTOR_POWER_ON + PROJECTOR_DELIMITER);
+                                userInterface.BooleanInput[PROJECTOR_POWER_ON_BUTTON].BoolValue = true;
+                                userInterface.BooleanInput[PROJECTOR_POWER_OFF_BUTTON].BoolValue = false;
+                                comport.Send(PROJECTOR_POWER_ON_STR + PROJECTOR_DELIMITER_STR);
                             }
                             //Turn off
-                            else if (args.Sig.Number == 7)
+                            else if (args.Sig.Number == PROJECTOR_POWER_OFF_BUTTON)
                             {
-                                PROJECTOR_POWER_ON_BUTTON = false;
-                                PROJECTOR_POWER_OFF_BUTTON = true;
-                                comport.Send(PROJECTOR_POWER_OFF + PROJECTOR_DELIMITER);
+                                userInterface.BooleanInput[PROJECTOR_POWER_ON_BUTTON].BoolValue = false;
+                                userInterface.BooleanInput[PROJECTOR_POWER_OFF_BUTTON].BoolValue = true;
+                                comport.Send(PROJECTOR_POWER_OFF_STR + PROJECTOR_DELIMITER_STR);
                             }
                             //HDMI
-                            else if (args.Sig.Number == 8)
+                            else if (args.Sig.Number == PROJECTOR_HDMI_BUTTON)
                             {
                                 setSourcesOff();
-                                PROJECTOR_HDMI_BUTTON = true;
-                                comport.Send(PROJECTOR_HDMI + PROJECTOR_DELIMITER);
+                                userInterface.BooleanInput[PROJECTOR_HDMI_BUTTON].BoolValue = true;
+                                comport.Send(PROJECTOR_HDMI_STR + PROJECTOR_DELIMITER_STR);
                             }
                             //VGA1
-                            else if (args.Sig.Number == 9)
+                            else if (args.Sig.Number == PROJECTOR_VGA1_BUTTON)
                             {
                                 setSourcesOff();
-                                PROJECTOR_VGA1_BUTTON = true;
-                                comport.Send(PROJECTOR_VGA1 + PROJECTOR_DELIMITER);
+                                userInterface.BooleanInput[PROJECTOR_VGA1_BUTTON].BoolValue = true;
+                                comport.Send(PROJECTOR_VGA1_STR + PROJECTOR_DELIMITER_STR);
                             }
                             //VGA2
-                            else if (args.Sig.Number == 10)
+                            else if (args.Sig.Number == PROJECTOR_VGA2_BUTTON)
                             {
                                 setSourcesOff();
-                                PROJECTOR_VGA2_BUTTON = true;
-                                comport.Send(PROJECTOR_VGA2 + PROJECTOR_DELIMITER);
+                                userInterface.BooleanInput[PROJECTOR_VGA2_BUTTON].BoolValue = true;
+                                comport.Send(PROJECTOR_VGA2_STR + PROJECTOR_DELIMITER_STR);
                             }
                             //SVideo
-                            else if (args.Sig.Number == 11)
+                            else if (args.Sig.Number == PROJECTOR_SVIDEO_BUTTON)
                             {
                                 setSourcesOff();
-                                PROJECTOR_SVIDEO_BUTTON = true;
-                                comport.Send(PROJECTOR_SVIDEO + PROJECTOR_DELIMITER);
+                                userInterface.BooleanInput[PROJECTOR_SVIDEO_BUTTON].BoolValue = true;
+                                comport.Send(PROJECTOR_SVIDEO_STR + PROJECTOR_DELIMITER_STR);
                             }
-                            //Lights On
-                            else if (args.Sig.Number == 12)
+                            //Lights Toggle
+                            else if (args.Sig.Number == LIGHTING_STATE_BUTTON)
                             {
-                                lighting.SetLoadsFullOn();
-                            }
-                            //Lights Off
-                            else if (args.Sig.Number == 13)
-                            {
-                                lighting.SetLoadsOff();
+                                if (userInterface.BooleanInput[LIGHTING_STATE_BUTTON].BoolValue == true)
+                                {
+                                    lighting.SetLoadsOff();
+                                    userInterface.BooleanInput[LIGHTING_STATE_BUTTON].BoolValue = false;
+                                }
+                                else
+                                {
+                                    lighting.SetLoadsFullOn();
+                                    userInterface.BooleanInput[LIGHTING_STATE_BUTTON].BoolValue = true;
+                                }
                             }
                             //Sleep Screen
-                            else if (args.Sig.Number == 1)
+                            else if (args.Sig.Number == SYSTEM_POWER_BUTTON)
                             {
-                                userInterface.BooleanInput[1].BoolValue = true;
-                                userInterface.BooleanInput[2].BoolValue = false;
+                                userInterface.BooleanInput[SYSTEM_POWER_BUTTON].BoolValue = true;
+                                userInterface.BooleanInput[SYSTEM_WAKE_BUTTON].BoolValue = false;
                             }
                             //Wake Screen
-                            else if (args.Sig.Number == 2)
+                            else if (args.Sig.Number == SYSTEM_WAKE_BUTTON)
                             {
-                                userInterface.BooleanInput[2].BoolValue  = true;
-                                userInterface.BooleanInput[1].BoolValue = false;
+                                userInterface.BooleanInput[SYSTEM_WAKE_BUTTON].BoolValue = true;
+                                userInterface.BooleanInput[SYSTEM_POWER_BUTTON].BoolValue = false;
                             }
                         }
                         break;
@@ -176,10 +183,10 @@ namespace HelloWorldTutorial
         }
         void setSourcesOff()
         {
-            userInterface.BooleanInput[8].BoolValue = false;
-            userInterface.BooleanInput[9].BoolValue = false;
-            userInterface.BooleanInput[10].BoolValue = false;
-            userInterface.BooleanInput[11].BoolValue = false;
+            userInterface.BooleanInput[PROJECTOR_HDMI_BUTTON].BoolValue = false;
+            userInterface.BooleanInput[PROJECTOR_VGA1_BUTTON].BoolValue = false;
+            userInterface.BooleanInput[PROJECTOR_VGA2_BUTTON].BoolValue = false;
+            userInterface.BooleanInput[PROJECTOR_SVIDEO_BUTTON].BoolValue = false;
         }
 
         /// <summary>
