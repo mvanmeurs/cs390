@@ -19,17 +19,17 @@ namespace HelloWorldTutorial
         private Tsw760 userInterface;
         private ComPort comport;
         private Glpp1DimFlv3CnPm lighting;
-        private HdMd8x1 hdmi_switcher;
+        private HdMd4x14kE hdmi_switcher;
 
         const int SYSTEM_POWER_BUTTON = 1;
         const int SYSTEM_WAKE_BUTTON = 2;
         const int LIGHTING_STATE_BUTTON = 3;
         const int PROJECTOR_POWER_ON_BUTTON = 6;
         const int PROJECTOR_POWER_OFF_BUTTON = 7;
-        const int PROJECTOR_HDMI_BUTTON = 8;
-        const int PROJECTOR_VGA1_BUTTON = 9;
-        const int PROJECTOR_VGA2_BUTTON = 10;
-        const int PROJECTOR_SVIDEO_BUTTON = 11;
+        const int DESKTOP_BUTTON = 8;
+        const int LAPTOP_BUTTON = 9;
+        const int BLURAY_PLAYER_BUTTON = 10;
+        const int DOCUMENT_CAMERA_BUTTON = 11;
 
         public const string PROJECTOR_DELIMITER_STR = "\x0D";
         public const string PROJECTOR_VGA1_STR = "SOURCE 10";
@@ -61,6 +61,10 @@ namespace HelloWorldTutorial
             {
                 Thread.MaxNumberOfUserThreads = 20;
 
+                hdmi_switcher = new HdMd4x14kE(04, "192.168.1.13", this);
+                hdmi_switcher.Register();
+                hdmi_switcher.FrontPanelLockOn();
+
                 userInterface = new Tsw760(03, this);
                 userInterface.SigChange += new SigEventHandler(userInterface_Sigchange);
                 userInterface.Register();
@@ -68,7 +72,8 @@ namespace HelloWorldTutorial
                 //A4 is 164 in hexidecial notaion
                 lighting = new Glpp1DimFlv3CnPm(164, this);
                 lighting.Register();
-                
+
+                //comport.Send(PROJECTOR_HDMI_STR + PROJECTOR_DELIMITER_STR);
 
                 comport = ComPorts[1]; 
                 comport.Register();
@@ -114,32 +119,32 @@ namespace HelloWorldTutorial
                                 userInterface.BooleanInput[PROJECTOR_POWER_OFF_BUTTON].BoolValue = true;
                                 comport.Send(PROJECTOR_POWER_OFF_STR + PROJECTOR_DELIMITER_STR);
                             }
-                            //HDMI
-                            else if (args.Sig.Number == PROJECTOR_HDMI_BUTTON)
+                            //Desktop
+                            else if (args.Sig.Number == DESKTOP_BUTTON)
                             {
                                 setSourcesOff();
-                                userInterface.BooleanInput[PROJECTOR_HDMI_BUTTON].BoolValue = true;
-                                comport.Send(PROJECTOR_HDMI_STR + PROJECTOR_DELIMITER_STR);
+                                userInterface.BooleanInput[DESKTOP_BUTTON].BoolValue = true;
+                                hdmi_switcher.
                             }
-                            //VGA1
-                            else if (args.Sig.Number == PROJECTOR_VGA1_BUTTON)
+                            //Laptop
+                            else if (args.Sig.Number == LAPTOP_BUTTON)
                             {
                                 setSourcesOff();
-                                userInterface.BooleanInput[PROJECTOR_VGA1_BUTTON].BoolValue = true;
+                                userInterface.BooleanInput[LAPTOP_BUTTON].BoolValue = true;
                                 comport.Send(PROJECTOR_VGA1_STR + PROJECTOR_DELIMITER_STR);
                             }
-                            //VGA2
-                            else if (args.Sig.Number == PROJECTOR_VGA2_BUTTON)
+                            //BluRay Player
+                            else if (args.Sig.Number == BLURAY_PLAYER_BUTTON)
                             {
                                 setSourcesOff();
-                                userInterface.BooleanInput[PROJECTOR_VGA2_BUTTON].BoolValue = true;
+                                userInterface.BooleanInput[BLURAY_PLAYER_BUTTON].BoolValue = true;
                                 comport.Send(PROJECTOR_VGA2_STR + PROJECTOR_DELIMITER_STR);
                             }
-                            //SVideo
-                            else if (args.Sig.Number == PROJECTOR_SVIDEO_BUTTON)
+                            //Document Camera
+                            else if (args.Sig.Number == DOCUMENT_CAMERA_BUTTON)
                             {
                                 setSourcesOff();
-                                userInterface.BooleanInput[PROJECTOR_SVIDEO_BUTTON].BoolValue = true;
+                                userInterface.BooleanInput[DOCUMENT_CAMERA_BUTTON].BoolValue = true;
                                 comport.Send(PROJECTOR_SVIDEO_STR + PROJECTOR_DELIMITER_STR);
                             }
                             //Lights Toggle
@@ -183,10 +188,10 @@ namespace HelloWorldTutorial
         }
         void setSourcesOff()
         {
-            userInterface.BooleanInput[PROJECTOR_HDMI_BUTTON].BoolValue = false;
-            userInterface.BooleanInput[PROJECTOR_VGA1_BUTTON].BoolValue = false;
-            userInterface.BooleanInput[PROJECTOR_VGA2_BUTTON].BoolValue = false;
-            userInterface.BooleanInput[PROJECTOR_SVIDEO_BUTTON].BoolValue = false;
+            userInterface.BooleanInput[DESKTOP_BUTTON].BoolValue = false;
+            userInterface.BooleanInput[LAPTOP_BUTTON].BoolValue = false;
+            userInterface.BooleanInput[BLURAY_PLAYER_BUTTON].BoolValue = false;
+            userInterface.BooleanInput[DOCUMENT_CAMERA_BUTTON].BoolValue = false;
         }
 
         /// <summary>

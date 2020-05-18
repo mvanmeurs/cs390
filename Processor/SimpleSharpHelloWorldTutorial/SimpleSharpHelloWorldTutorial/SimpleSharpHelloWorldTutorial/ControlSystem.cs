@@ -5,12 +5,32 @@ using Crestron.SimplSharpPro.CrestronThread;        	// For Threading
 using Crestron.SimplSharpPro.Diagnostics;		    	// For System Monitor Access
 using Crestron.SimplSharpPro.DeviceSupport;         	// For Generic Device Support
 using Crestron.SimplSharpPro.UI;
+using Crestron.SimplSharpPro.Lighting;
 
 namespace SimpleSharpHelloWorldTutorial
 {
     public class ControlSystem : CrestronControlSystem
     {
         private Tsw760 userInterface;
+        private ComPort comport;
+        private Glpp1DimFlv3CnPm lighting;
+
+        const int LIGHTING_STATE_BUTTON = 3;
+        const int PROJECTOR_ON_BUTTON = 6;
+        const int PROJECTOR_OFF_BUTTON = 7;
+        const int PROJECTOR_HDMI_BUTTON = 8;
+        const int PROJECTOR_VGA1_BUTTON = 9;
+        const int PROJECTOR_VGA2_BUTTON = 10;
+        const int PROJECTOR_SVIDEO_BUTTON = 11;
+
+        public const string PROJECTOR_DELIMITER_STR = "\x0D";
+        public const string PROJECTOR_VGA1_STR = "Source 10";
+        public const string PROJECTOR_VGA2_STR = "Source 20";
+        public const string PROJECTOR_HDMI_STR = "Source 30";
+        public const string PROJECTOR_SVIDEO_STR = "Source 40";
+        public const string PROJECTOR_POWER_ON_STR = "PWR ON";
+        public const string PROJECTOR_POWER_OFF_STR = "PWR OFF";
+
         /// <summary>
         /// ControlSystem Constructor. Starting point for the SIMPL#Pro program.
         /// Use the constructor to:
@@ -35,6 +55,23 @@ namespace SimpleSharpHelloWorldTutorial
                 userInterface.SigChange += new SigEventHandler(userInterface_SigChange);
                 userInterface.Register();
 
+                //164 is A4 is decimal notation
+                lighting = new Glpp1DimFlv3CnPm(164, this);
+                lighting.Register();
+
+                comport = ComPorts[1];
+                comport.Register();
+                comport.SetComPortSpec(Crestron.SimplSharpPro.ComPort.eComBaudRates.ComspecBaudRate9600,
+                                        Crestron.SimplSharpPro.ComPort.eComDataBits.ComspecDataBits8,
+                                        Crestron.SimplSharpPro.ComPort.eComParityType.ComspecParityNone,
+                                        Crestron.SimplSharpPro.ComPort.eComStopBits.ComspecStopBits1,
+                                        Crestron.SimplSharpPro.ComPort.eComProtocolType.ComspecProtocolRS232,
+                                        Crestron.SimplSharpPro.ComPort.eComHardwareHandshakeType.ComspecHardwareHandshakeNone,
+                                        Crestron.SimplSharpPro.ComPort.eComSoftwareHandshakeType.ComspecSoftwareHandshakeNone,
+                                        false);
+
+
+
                 //Subscribe to the controller events (System, Program, and Ethernet)
                 CrestronEnvironment.SystemEventHandler += new SystemEventHandler(ControlSystem_ControllerSystemEventHandler);
                 CrestronEnvironment.ProgramStatusEventHandler += new ProgramStatusEventHandler(ControlSystem_ControllerProgramEventHandler);
@@ -46,6 +83,14 @@ namespace SimpleSharpHelloWorldTutorial
             }
         }
 
+        void setSourcesOff()
+        {
+            userInterface.BooleanInput[PROJECTOR_HDMI_BUTTON].BoolValue = false;
+            userInterface.BooleanInput[PROJECTOR_VGA1_BUTTON].BoolValue = false;
+            userInterface.BooleanInput[PROJECTOR_VGA2_BUTTON].BoolValue = false;
+            userInterface.BooleanInput[PROJECTOR_SVIDEO_BUTTON].BoolValue = false;
+        }
+
         void userInterface_SigChange(BasicTriList currentDevice, SigEventArgs args)
         {
             switch (args.Sig.Type)
@@ -54,13 +99,61 @@ namespace SimpleSharpHelloWorldTutorial
                     {
                         if (args.Sig.BoolValue)
                         {
-                            if (args.Sig.Number == 101)
+                            //Projector On
+                            if (args.Sig.Number == PROJECTOR_ON_BUTTON)
                             {
-                                userInterface.BooleanInput[101].BoolValue = true;
+                                userInterface.BooleanInput[PROJECTOR_ON_BUTTON].BoolValue = true;
+                                userInterface.BooleanInput[PROJECTOR_OFF_BUTTON].BoolValue = false;
+                                comport.Send(PROJECTOR_POWER_ON_STR + PROJECTOR_DELIMITER_STR);
                             }
-                            else if (args.Sig.Number == 100)
+                            //Projector Off
+                            else if(args.Sig.Number == PROJECTOR_OFF_BUTTON)
                             {
-                                userInterface.BooleanInput[101].BoolValue = false;
+                                userInterface.BooleanInput[PROJECTOR_ON_BUTTON].BoolValue = false;
+                                userInterface.BooleanInput[PROJECTOR_OFF_BUTTON].BoolValue = true;
+                                comport.Send(PROJECTOR_POWER_OFF_STR + PROJECTOR_DELIMITER_STR);
+                            }
+                            //HDMI
+                            else if (args.Sig.Number == PROJECTOR_HDMI_BUTTON)
+                            {
+                                setSourcesOff();
+                                userInterface.BooleanInput[PROJECTOR_HDMI_BUTTON].BoolValue = true;
+                                comport.Send(PROJECTOR_HDMI_STR + PROJECTOR_DELIMITER_STR);
+                            }
+                            //VGA1
+                            else if (args.Sig.Number == PROJECTOR_VGA1_BUTTON)
+                            {
+                                setSourcesOff();
+                                userInterface.BooleanInput[PROJECTOR_VGA1_BUTTON].BoolValue = true;
+                                comport.Send(PROJECTOR_VGA1_STR + PROJECTOR_DELIMITER_STR);
+                            }
+                            //VGA2
+                            else if (args.Sig.Number == PROJECTOR_VGA2_BUTTON)
+                            {
+                                setSourcesOff();
+                                userInterface.BooleanInput[PROJECTOR_VGA2_BUTTON].BoolValue = true;
+                                comport.Send(PROJECTOR_VGA2_STR + PROJECTOR_DELIMITER_STR);
+                            }
+                            //SVIDEO
+                            else if (args.Sig.Number == PROJECTOR_SVIDEO_BUTTON)
+                            {
+                                setSourcesOff();
+                                userInterface.BooleanInput[PROJECTOR_SVIDEO_BUTTON].BoolValue = true;
+                                comport.Send(PROJECTOR_SVIDEO_STR + PROJECTOR_DELIMITER_STR);
+                            }
+                            //Lighting Toggle
+                            else if (args.Sig.Number == LIGHTING_STATE_BUTTON)
+                            {
+                                if (userInterface.BooleanInput[LIGHTING_STATE_BUTTON].BoolValue == true)
+                                {
+                                    lighting.SetLoadsOff();
+                                    userInterface.BooleanInput[LIGHTING_STATE_BUTTON].BoolValue = false;
+                                }
+                                else 
+                                {
+                                    lighting.SetLoadsFullOn();
+                                    userInterface.BooleanInput[LIGHTING_STATE_BUTTON].BoolValue = true;
+                                }
                             }
                         }
                         break;
