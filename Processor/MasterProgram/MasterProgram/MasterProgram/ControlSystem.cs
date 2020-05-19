@@ -104,18 +104,23 @@ namespace HelloWorldTutorial
 
         void userInterface_Sigchange(BasicTriList currentDevice, SigEventArgs args)
         {
-            if (!hasProjectorBeenSwitchedToHDMI)
-            {
-                comport.Send(PROJECTOR_HDMI_STR + PROJECTOR_DELIMITER_STR);
-                hasProjectorBeenSwitchedToHDMI = true;
-            }
-
             switch (args.Sig.Type)
             {
                 case eSigType.Bool:
                     {
                         if (args.Sig.BoolValue)
                         {
+
+                            //This will switch the projector to HDMI only once after it has
+                            //been turned on and right before the user changes the input on the HDMI switcher. This way we avoid switching
+                            //the projector to HDMI each time the user changes the input on the switcher.
+                            {
+
+                                comport.Send(PROJECTOR_HDMI_STR + PROJECTOR_DELIMITER_STR);
+                                hasProjectorBeenSwitchedToHDMI = true;
+                                userInterface.BooleanInput[101].BoolValue = true;
+                            }
+                            
                             //Turn on
                             if (args.Sig.Number == PROJECTOR_POWER_ON_BUTTON)
                             {
@@ -129,6 +134,7 @@ namespace HelloWorldTutorial
                                 userInterface.BooleanInput[PROJECTOR_POWER_ON_BUTTON].BoolValue = false;
                                 userInterface.BooleanInput[PROJECTOR_POWER_OFF_BUTTON].BoolValue = true;
                                 comport.Send(PROJECTOR_POWER_OFF_STR + PROJECTOR_DELIMITER_STR);
+                                hasProjectorBeenSwitchedToHDMI = false;
                             }
                             //Desktop
                             else if (args.Sig.Number == DESKTOP_BUTTON && !userInterface.BooleanInput[DESKTOP_BUTTON].BoolValue)
