@@ -9,6 +9,7 @@ using Crestron.SimplSharpPro.CrestronConnected;
 using Crestron.SimplSharpPro.DM.Endpoints.Receivers;
 using Crestron.SimplSharpPro.Lighting;
 using Crestron.SimplSharpPro.DM;
+using DMPS3_200Test;
 
 
 namespace HelloWorldTutorial
@@ -19,7 +20,15 @@ namespace HelloWorldTutorial
         private Tsw760 userInterface;
         private ComPort comport;
         private Glpp1DimFlv3CnPm lighting;
-        private HdMd4x14kE hdmi_switcher;
+        private HDMISwitcher hdmi_switcher;
+
+        private const string HDMI_SWITCHER_IP = "192.168.1.13";
+        private const int HDMI_DESKTOP_INPUT = 1;
+        private const int HDMI_LAPTOP_INPUT = 2;
+        private const int HDMI_BLURAY_INPUT = 3;
+        private const int HDMI_DOC_CAM_INPUT = 4;
+
+        private bool hasProjectorBeenSwitchedToHDMI = false;
 
         const int SYSTEM_POWER_BUTTON = 1;
         const int SYSTEM_WAKE_BUTTON = 2;
@@ -61,9 +70,7 @@ namespace HelloWorldTutorial
             {
                 Thread.MaxNumberOfUserThreads = 20;
 
-                hdmi_switcher = new HdMd4x14kE(04, "192.168.1.13", this);
-                hdmi_switcher.Register();
-                hdmi_switcher.FrontPanelLockOn();
+                hdmi_switcher = new HDMISwitcher(165, HDMI_SWITCHER_IP, this);
 
                 userInterface = new Tsw760(03, this);
                 userInterface.SigChange += new SigEventHandler(userInterface_Sigchange);
@@ -72,8 +79,6 @@ namespace HelloWorldTutorial
                 //A4 is 164 in hexidecial notaion
                 lighting = new Glpp1DimFlv3CnPm(164, this);
                 lighting.Register();
-
-                //comport.Send(PROJECTOR_HDMI_STR + PROJECTOR_DELIMITER_STR);
 
                 comport = ComPorts[1]; 
                 comport.Register();
@@ -99,6 +104,12 @@ namespace HelloWorldTutorial
 
         void userInterface_Sigchange(BasicTriList currentDevice, SigEventArgs args)
         {
+            if (!hasProjectorBeenSwitchedToHDMI)
+            {
+                comport.Send(PROJECTOR_HDMI_STR + PROJECTOR_DELIMITER_STR);
+                hasProjectorBeenSwitchedToHDMI = true;
+            }
+
             switch (args.Sig.Type)
             {
                 case eSigType.Bool:
@@ -120,32 +131,32 @@ namespace HelloWorldTutorial
                                 comport.Send(PROJECTOR_POWER_OFF_STR + PROJECTOR_DELIMITER_STR);
                             }
                             //Desktop
-                            else if (args.Sig.Number == DESKTOP_BUTTON)
+                            else if (args.Sig.Number == DESKTOP_BUTTON && !userInterface.BooleanInput[DESKTOP_BUTTON].BoolValue)
                             {
                                 setSourcesOff();
                                 userInterface.BooleanInput[DESKTOP_BUTTON].BoolValue = true;
-                                hdmi_switcher.
+                                hdmi_switcher.RouteVideo(HDMI_DESKTOP_INPUT);
                             }
                             //Laptop
-                            else if (args.Sig.Number == LAPTOP_BUTTON)
+                            else if (args.Sig.Number == LAPTOP_BUTTON && !userInterface.BooleanInput[LAPTOP_BUTTON].BoolValue)
                             {
                                 setSourcesOff();
                                 userInterface.BooleanInput[LAPTOP_BUTTON].BoolValue = true;
-                                comport.Send(PROJECTOR_VGA1_STR + PROJECTOR_DELIMITER_STR);
+                                hdmi_switcher.RouteVideo(HDMI_LAPTOP_INPUT);
                             }
                             //BluRay Player
-                            else if (args.Sig.Number == BLURAY_PLAYER_BUTTON)
+                            else if (args.Sig.Number == BLURAY_PLAYER_BUTTON && !userInterface.BooleanInput[BLURAY_PLAYER_BUTTON].BoolValue)
                             {
                                 setSourcesOff();
                                 userInterface.BooleanInput[BLURAY_PLAYER_BUTTON].BoolValue = true;
-                                comport.Send(PROJECTOR_VGA2_STR + PROJECTOR_DELIMITER_STR);
+                                hdmi_switcher.RouteVideo(HDMI_BLURAY_INPUT);
                             }
                             //Document Camera
-                            else if (args.Sig.Number == DOCUMENT_CAMERA_BUTTON)
+                            else if (args.Sig.Number == DOCUMENT_CAMERA_BUTTON && !userInterface.BooleanInput[DOCUMENT_CAMERA_BUTTON].BoolValue)
                             {
                                 setSourcesOff();
                                 userInterface.BooleanInput[DOCUMENT_CAMERA_BUTTON].BoolValue = true;
-                                comport.Send(PROJECTOR_SVIDEO_STR + PROJECTOR_DELIMITER_STR);
+                                hdmi_switcher.RouteVideo(HDMI_DOC_CAM_INPUT);
                             }
                             //Lights Toggle
                             else if (args.Sig.Number == LIGHTING_STATE_BUTTON)
@@ -186,7 +197,8 @@ namespace HelloWorldTutorial
                     }
             }
         }
-        void setSourcesOff()
+
+        private void setSourcesOff()
         {
             userInterface.BooleanInput[DESKTOP_BUTTON].BoolValue = false;
             userInterface.BooleanInput[LAPTOP_BUTTON].BoolValue = false;
