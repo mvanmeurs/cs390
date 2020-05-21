@@ -10,3 +10,4 @@ C:\Users\mason\Documents\CS390\VS2008\Processor\SimpleSharpHelloWorldTutorial\Si
 C:\Users\mason\Documents\CS390\VS2008\Processor\SimpleSharpHelloWorldTutorial\SimpleSharpHelloWorldTutorial\SimpleSharpHelloWorldTutorial\obj\Debug\SimpleSharpHelloWorldTutorial.pdb
 C:\Users\mason\Documents\CS390\VS2008\Processor\SimpleSharpHelloWorldTutorial\SimpleSharpHelloWorldTutorial\SimpleSharpHelloWorldTutorial\bin\Debug\Crestron.SimplSharpPro.Lighting.dll
 C:\Users\mason\Documents\CS390\VS2008\Processor\SimpleSharpHelloWorldTutorial\SimpleSharpHelloWorldTutorial\SimpleSharpHelloWorldTutorial\bin\Debug\Crestron.SimplSharpPro.Shades.dll
+C:\Users\mason\Documents\CS390\VS2008\Processor\SimpleSharpHelloWorldTutorial\SimpleSharpHelloWorldTutorial\SimpleSharpHelloWorldTutorial\bin\Debug\Crestron.SimplSharpPro.DM.dll

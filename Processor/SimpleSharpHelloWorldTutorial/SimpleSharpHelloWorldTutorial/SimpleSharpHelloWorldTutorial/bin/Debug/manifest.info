@@ -1,4 +1,4 @@
-﻿MainAssembly=SimpleSharpHelloWorldTutorial.dll:ba84e360c5185ff46cde0ca5ba3b6777
+﻿MainAssembly=SimpleSharpHelloWorldTutorial.dll:4df76b05d7c705e0ef65500e95524714
 MainAssemblyMinFirmwareVersion=1.009.0029
 MainAssemblyResource=SimplSharpData.dat:820b61c48c8a2cace82957eed4cc377c
 MainAssemblyResource=SimplSharpData.dat.der:bf862965c00f3e6ec535e4e00e82d30c
@@ -8,6 +8,10 @@ MainAssemblyResource=SimplSharpData.dat.der:bf862965c00f3e6ec535e4e00e82d30c
 DependencySource=Crestron.SimplSharpPro.DeviceSupport.dll:caae4b4259aaf619059f0ae34473bfd2
 DependencyPath=SimpleSharpHelloWorldTutorial.cpz:Crestron.SimplSharpPro.DeviceSupport.dll
 DependencyMainAssembly=Crestron.SimplSharpPro.DeviceSupport.dll:caae4b4259aaf619059f0ae34473bfd2
+ü
+DependencySource=Crestron.SimplSharpPro.DM.dll:bdf5acfa80cc3bb87f21deb891128b1d
+DependencyPath=SimpleSharpHelloWorldTutorial.cpz:Crestron.SimplSharpPro.DM.dll
+DependencyMainAssembly=Crestron.SimplSharpPro.DM.dll:bdf5acfa80cc3bb87f21deb891128b1d
 ü
 DependencySource=Crestron.SimplSharpPro.Lighting.dll:5a4a355db03b075b1e731469c0440a86
 DependencyPath=SimpleSharpHelloWorldTutorial.cpz:Crestron.SimplSharpPro.Lighting.dll

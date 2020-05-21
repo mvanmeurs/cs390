@@ -22,7 +22,7 @@ namespace HelloWorldTutorial
         private Glpp1DimFlv3CnPm lighting;
         private HDMISwitcher hdmi_switcher;
 
-        private const string HDMI_SWITCHER_IP = "192.168.1.13";
+        private const string HDMI_SWITCHER_IP = "192.168.1.15";
         private const int HDMI_DESKTOP_INPUT = 1;
         private const int HDMI_LAPTOP_INPUT = 2;
         private const int HDMI_BLURAY_INPUT = 3;
