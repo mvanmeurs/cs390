@@ -113,9 +113,11 @@ namespace HelloWorldTutorial
 
                             //This will switch the projector to HDMI only once after it has
                             //been turned on and right before the user changes the input on the HDMI switcher. This way we avoid switching
-                            //the projector to HDMI each time the user changes the input on the switcher.
+                            //the projector to HDMI each time the user changes the input on the switcher. A better way to do this would be to send
+                            //a string to get the current input the projector is on, and switch it to HDMI if it's not set to HDMI. Since the school
+                            //year is over, this won't be implemented in our project.
+                            if(!hasProjectorBeenSwitchedToHDMI && userInterface.BooleanInput[PROJECTOR_POWER_ON_BUTTON].BoolValue == true)
                             {
-
                                 comport.Send(PROJECTOR_HDMI_STR + PROJECTOR_DELIMITER_STR);
                                 hasProjectorBeenSwitchedToHDMI = true;
                                 userInterface.BooleanInput[101].BoolValue = true;
